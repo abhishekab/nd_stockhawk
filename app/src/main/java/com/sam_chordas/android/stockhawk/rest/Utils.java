@@ -1,10 +1,25 @@
 package com.sam_chordas.android.stockhawk.rest;
 
+import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
+
+import com.github.mikephil.charting.data.Entry;
+import com.sam_chordas.android.stockhawk.R;
 import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,5 +106,53 @@ public class Utils {
       e.printStackTrace();
     }
     return builder.build();
+  }
+
+  public static String getStartDateForStockDetails(int noOfMonths)
+  {
+    Calendar calendar=Calendar.getInstance();
+    calendar.add(Calendar.MONTH,-1*noOfMonths);
+    Date date=calendar.getTime();
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+    return sdf.format(date);
+  }
+  public static String getEndDateForStockDetails()
+  {
+    Calendar calendar=Calendar.getInstance();
+    Date date=calendar.getTime();
+    SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+    return sdf.format(date);
+  }
+
+
+
+
+  static boolean isNetworkAvailable(Context context) {
+    ConnectivityManager cm =
+            (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+    NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+    boolean isConnected = activeNetwork != null &&
+            activeNetwork.isConnectedOrConnecting();
+    return isConnected;
+  }
+
+
+
+  public static void checkNetworkAvailable(Context context) {
+
+    if(!isNetworkAvailable(context))
+    {
+      new AlertDialog.Builder(context)
+              .setTitle(R.string.network_unavailable)
+              .setMessage(R.string.check_internet_connectivity)
+              .setPositiveButton(context.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+              }).show();
+
+    }
   }
 }
