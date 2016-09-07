@@ -12,10 +12,12 @@
   <string name="network_toast">Uh-oh! This app requires an internet connection</string>
   <string name="search_and_add_a_symbol">Search and Add a Symbol</string>
   <string name="closing">Closing</string>
-  <string name="ok">ok</string>
+  <string name="ok">OK</string>
   <string name="network_unavailable">Network Unavailable</string>
   <string name="check_internet_connectivity">Check internet connectivity and try again! </string>
   <string name="error_fetch_stock_history">Oops! Error in fetching Stock History</string>
   <string name="on">on</string>
+  <string name="no_stocks_to_display">No Stocks to Display</string>
+  <string name="not_connected">Not Connected, Unable to Fetch Stocks</string>
 
 </resources>
