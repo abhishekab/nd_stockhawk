@@ -33,7 +33,7 @@ public class Utils {
 
   public static boolean showPercent = true;
 
-  public static ArrayList quoteJsonToContentVals(String JSON){
+  public static ArrayList quoteJsonToContentVals(String JSON) throws NumberFormatException{
     ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
     JSONObject jsonObject = null;
     JSONArray resultsArray = null;
@@ -60,6 +60,10 @@ public class Utils {
     } catch (JSONException e){
       Log.e(LOG_TAG, "String to JSON failed: " + e);
     }
+    catch (NumberFormatException e)
+    {
+      throw e;
+    }
     return batchOperations;
   }
 
@@ -85,7 +89,7 @@ public class Utils {
     return change;
   }
 
-  public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
+  public static ContentProviderOperation buildBatchOperation (JSONObject jsonObject) throws NumberFormatException{
     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
         QuoteProvider.Quotes.CONTENT_URI);
     try {
@@ -104,6 +108,10 @@ public class Utils {
 
     } catch (JSONException e){
       e.printStackTrace();
+    }
+    catch (NumberFormatException e)
+    {
+      throw e;
     }
     return builder.build();
   }
