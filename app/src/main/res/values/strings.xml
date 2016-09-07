@@ -20,5 +20,6 @@
   <string name="no_stocks_to_display">No Stocks to Display</string>
   <string name="not_connected">Not Connected, Unable to Fetch Stocks</string>
   <string name="check_symbol">Oops! Please check the Symbol</string>
+  <string name="title_widget_stock">Stocks Widget</string>
 
 </resources>

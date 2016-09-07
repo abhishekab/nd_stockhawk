@@ -34,9 +34,23 @@
         android:paddingEnd="10sp"
         tools:text="1000.00"
         />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+      <ImageView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignStart="@+id/change"
+          android:layout_alignLeft="@+id/change"
+          android:layout_alignBottom="@+id/change"
+          android:layout_alignTop="@+id/change"
+          android:layout_alignEnd="@+id/change"
+          android:layout_alignRight="@+id/change"
+          android:id="@+id/imageBackground"
+          android:scaleType="fitXY"
+          android:src="@drawable/percent_change_pill"/>
     <TextView
         android:id="@+id/change"
-        android:background="@drawable/percent_change_pill"
         style="@style/PercentChangeTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,5 +60,6 @@
         android:paddingEnd="3dp"
         tools:text="100%"
         />
+    </RelativeLayout>
   </LinearLayout>
 </LinearLayout>

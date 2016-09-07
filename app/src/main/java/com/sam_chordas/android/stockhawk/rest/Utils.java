@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -32,6 +33,8 @@ public class Utils {
   private static String LOG_TAG = Utils.class.getSimpleName();
 
   public static boolean showPercent = true;
+  public static final String ACTION_DATA_UPDATED =
+          "com.sam_chordas.android.stockhawk.ACTION_DATA_UPDATED";
 
   public static ArrayList quoteJsonToContentVals(String JSON) throws NumberFormatException{
     ArrayList<ContentProviderOperation> batchOperations = new ArrayList<>();
@@ -162,5 +165,11 @@ public class Utils {
               }).show();
 
     }
+  }
+
+  public static void updateWidgets(Context context) {
+    Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED)
+            .setPackage(context.getPackageName());
+    context.sendBroadcast(dataUpdatedIntent);
   }
 }

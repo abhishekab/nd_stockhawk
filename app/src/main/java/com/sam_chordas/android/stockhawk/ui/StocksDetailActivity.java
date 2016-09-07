@@ -75,51 +75,59 @@ public class StocksDetailActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Response response) throws IOException {
+                try {
+                    int statusCode = response.code();
+                    Log.e(LOG_TAG, " status code:" + statusCode);
+                    final List<Entry> listStockEntry = getEntriesFromJSON(response.body().string());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBarFetching.setVisibility(View.GONE);
+                            if (listStockEntry == null || listStockEntry.isEmpty()) {
+                                Toast.makeText(StocksDetailActivity.this, R.string.error_fetch_stock_history, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            LineDataSet dataSet = new LineDataSet(listStockEntry, getString(R.string.closing));
+                            dataSet.setColor(Color.BLUE);
+                            dataSet.setLineWidth(2f);
+                            dataSet.setValueTextColor(Color.RED);
 
-                int statusCode = response.code();
-                Log.e(LOG_TAG, " status code:" + statusCode);
-                final List<Entry> listStockEntry = getEntriesFromJSON(response.body().string());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBarFetching.setVisibility(View.GONE);
-                        if (listStockEntry == null || listStockEntry.isEmpty()) {
-                            Toast.makeText(StocksDetailActivity.this, R.string.error_fetch_stock_history, Toast.LENGTH_SHORT).show();
-                            return;
+                            LineData lineData = new LineData(dataSet);
+                            AxisValueFormatter xAxisFormatter = new DateAxisValueFormatter(mReferenceTime);
+                            XAxis xAxis = mChart.getXAxis();
+                            xAxis.setValueFormatter(xAxisFormatter);
+                            YAxis yAxisLeft = mChart.getAxisLeft();
+                            YAxis yAxisRight = mChart.getAxisRight();
+                            AxisValueFormatter YValueFormatter = new AxisValueFormatter() {
+
+                                @Override
+                                public String getFormattedValue(float value, AxisBase axis) {
+                                    return "$" + (int) value;
+                                }
+
+                                @Override
+                                public int getDecimalDigits() {
+                                    return 0;
+                                }
+                            };
+                            yAxisLeft.setValueFormatter(YValueFormatter);
+                            yAxisRight.setValueFormatter(YValueFormatter);
+                            CustomMarkerView customMarkerView = new CustomMarkerView(StocksDetailActivity.this, R.layout.marker_view, mReferenceTime);
+                            mChart.setMarkerView(customMarkerView);
+                            mChart.setData(lineData);
+                            mChart.setDescription(mSymbol);
+                            mChart.invalidate();
+
                         }
-                        LineDataSet dataSet = new LineDataSet(listStockEntry, getString(R.string.closing));
-                        dataSet.setColor(Color.BLUE);
-                        dataSet.setLineWidth(2f);
-                        dataSet.setValueTextColor(Color.RED);
-
-                        LineData lineData = new LineData(dataSet);
-                        AxisValueFormatter xAxisFormatter = new DateAxisValueFormatter(mReferenceTime);
-                        XAxis xAxis = mChart.getXAxis();
-                        xAxis.setValueFormatter(xAxisFormatter);
-                        YAxis yAxisLeft=mChart.getAxisLeft();
-                        YAxis yAxisRight=mChart.getAxisRight();
-                        AxisValueFormatter YValueFormatter=new AxisValueFormatter() {
-
-                            @Override
-                            public String getFormattedValue(float value, AxisBase axis) {
-                                return "$"+(int)value;
-                            }
-
-                            @Override
-                            public int getDecimalDigits() {
-                                return 0;
-                            }
-                        };
-                        yAxisLeft.setValueFormatter(YValueFormatter);
-                        yAxisRight.setValueFormatter(YValueFormatter);
-                        CustomMarkerView customMarkerView=new CustomMarkerView(StocksDetailActivity.this,R.layout.marker_view,mReferenceTime);
-                        mChart.setMarkerView(customMarkerView);
-                        mChart.setData(lineData);
-                        mChart.setDescription(mSymbol);
-                        mChart.invalidate();
-
-                    }
-                });
+                    });
+                }catch (IOException ex){
+                    ex.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBarFetching.setVisibility(View.GONE);
+                        }});
+                }
             }
         });
 
@@ -132,7 +140,7 @@ public class StocksDetailActivity extends AppCompatActivity {
 
 
         mSymbol = getIntent().getStringExtra(SYMBOL_KEY);
-        setTitle(mSymbol);
+        setTitle(mSymbol.toUpperCase());
         setContentView(R.layout.activity_stocks_detail);
         progressBarFetching = (ProgressBar) findViewById(R.id.progressBarFetching);
         Log.d(LOG_TAG, getUrlStringFromSymbol(mSymbol));
