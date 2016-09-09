@@ -21,5 +21,6 @@
   <string name="not_connected">Not Connected, Unable to Fetch Stocks</string>
   <string name="check_symbol">Oops! Please check the Symbol</string>
   <string name="title_widget_stock">Stocks Widget</string>
+  <string name="stock_already_saved">This stock is already saved!</string>
 
 </resources>
